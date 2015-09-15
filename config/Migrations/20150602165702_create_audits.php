@@ -36,6 +36,11 @@ class CreateAudits extends AbstractMigration
             'limit' => 255,
             'null' => false,
         ]);
+        $table->addColumn('request_id', 'string', [
+            'default' => null,
+            'limit' => 36,
+            'null' => false,
+        ]);
         $table->addColumn('json_object', 'text', [
             'default' => null,
             'null' => true,

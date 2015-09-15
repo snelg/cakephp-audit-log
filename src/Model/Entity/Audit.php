@@ -18,6 +18,7 @@ class Audit extends Entity
         'event' => true,
         'model' => true,
         'entity_id' => true,
+        'request_id' => true,
         'json_object' => true,
         'description' => true,
         'source_id' => true,

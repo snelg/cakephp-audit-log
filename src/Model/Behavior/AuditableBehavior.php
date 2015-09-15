@@ -4,11 +4,10 @@ namespace AuditLog\Model\Behavior;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
-use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Core\Configure;
 use Cake\Utility\Inflector;
-use Cake\Utility\Hash;
+use Cake\Utility\Text;
 /**
  * Auditable behavior
  */
@@ -26,6 +25,17 @@ class AuditableBehavior extends Behavior
         'habtm'  => [],
         'json_object' => true
     ];
+
+    /**
+     * The request_id, a unique ID generated once per request to allow multiple record changes to be grouped by request
+     */
+    private static $_request_id = null;
+    private static function request_id() {
+        if (empty(self::$_request_id)) {
+            self::$_request_id = Text::uuid();
+        }
+        return self::$_request_id;
+    }
 
     /**
      * A copy of the object as it existed prior to the save. We're going
@@ -138,6 +148,7 @@ class AuditableBehavior extends Behavior
             'event' => $entity->isNew() ? 'CREATE' : 'EDIT',
             'model' => $alias,
             'entity_id' => $entity->id,
+            'request_id' => self::request_id(),
             'source_id' => $source['id'],
             'source_ip' => $source['ip'],
             'source_url' => $source['url'],
@@ -254,6 +265,7 @@ class AuditableBehavior extends Behavior
             'event' => 'DELETE',
             'model' => $alias,
             'entity_id' => $entity->id,
+            'request_id' => self::request_id(),
             'source_id' => $source['id'],
             'source_ip' => $source['ip'],
             'source_url' => $source['url'],

@@ -205,7 +205,7 @@ class AuditableBehavior extends Behavior
             }
 
             if ($entity->isNew() && method_exists($this->_table, 'afterAuditCreate')) {
-                $this->_table->afterAuditCreate();
+                $this->_table->afterAuditCreate($audit);
             }
 
             if (!$entity->isNew() && method_exists($this->_table, 'afterAuditUpdate')) {
@@ -278,6 +278,10 @@ class AuditableBehavior extends Behavior
         $Audits = TableRegistry::get('AuditLog.Audits');
         $audit = $Audits->newEntity($data);
         $Audits->save($audit);
+
+        if (method_exists($this->_table, 'afterAuditDelete')) {
+            $this->_table->afterAuditDelete($audit);
+        }
     }
 
     /**

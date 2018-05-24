@@ -4,7 +4,7 @@ namespace AuditLog\Model\Behavior;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
-use Cake\ORM\Locator\TableLocator;
+use Cake\ORM\TableRegistry;
 use Cake\Core\Configure;
 use Cake\Utility\Inflector;
 use Cake\Utility\Text;
@@ -193,7 +193,7 @@ class AuditableBehavior extends Behavior
             ];
         }
 
-        $Audits = TableLocator::get('AuditLog.Audits');
+        $Audits = TableRegistry::getTableLocator()->get('AuditLog.Audits');
         if ($entity->isNew() || count($updates)) {
             $audit = $Audits->newEntity($data);
             $audit = $Audits->save($audit);
@@ -275,7 +275,7 @@ class AuditableBehavior extends Behavior
         if ($config['json_object']) {
             $data['json_object'] = json_encode($audit);
         }
-        $Audits = TableLocator::get('AuditLog.Audits');
+        $Audits = TableRegistry::getTableLocator()->get('AuditLog.Audits');
         $audit = $Audits->newEntity($data);
         $Audits->save($audit);
 
